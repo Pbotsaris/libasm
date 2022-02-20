@@ -9,7 +9,7 @@ my_strcmp:
   mov rbx, 0
   mov rcx, 0
 
-outer_loop:
+loop:
   mov bl, [rdi]
   mov cl, [rsi]
 
@@ -19,7 +19,7 @@ outer_loop:
   inc rdi
   inc rsi
   cmp [rdi], byte 0
-  jne outer_loop
+  jne loop
 
   cmp [rsi], byte 0
   jne longer

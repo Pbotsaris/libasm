@@ -7,9 +7,14 @@ void test_memcpy(void);
 void test_strcmp(void);
 void test_memmove(void);
 void test_strncmp(void);
+void test_strcasecmp(void);
+void test_index(void);
+void test_read(void);
+void test_write(void);
 
 int main(void)
 {
+  // you can comment tests at anytime if you want to test something in particular.
   test_strlen();
   test_strchr();
   test_memset();
@@ -17,6 +22,10 @@ int main(void)
   test_strcmp();
   test_memmove();
   test_strncmp();
+  test_strcasecmp();
+  test_index();
+  test_read();
+  test_write();
 
   return 0;
 }
@@ -162,4 +171,88 @@ void test_strncmp(void)
     printf("strncmp failed. Was: %d, should be: %d \n", resg, resh);
   else
    printf("strncmp passed!\n");
+}
+
+
+void test_strcasecmp(void)
+{
+  int res =  my_strcasecmp("pEdRo", "peDro");
+
+  if(res != 0)
+    printf("strcasecmp failed. Should return 0 but returned %d\n", res);
+  else
+    printf("strcasecmp passed!\n");
+
+}
+
+
+void test_index(void)
+{
+
+ // index finds the null char where strchr doesn't.
+  char *res = my_index("testing", '\0');
+  char *resb = my_index("testing", 't');
+  char *resc = my_index("testing", 'z');
+
+  if(res && resb[0] == 't' && !resc)
+    printf("index passed!\n");
+  else
+    printf("index failed. Was %p, %c and %p and should be <a pointer address>, t and null\n", res, resb[0], resc);
+}
+
+
+
+void test_read(void)
+{
+  char buffer[30];  
+  char bufferb[30];
+
+  int fd = open("test_files/test_read.txt", O_RDONLY);// IMPORTANT: Make sure this file exists
+  int res = my_read(fd, buffer, 21);
+  close(fd);
+
+  fd = open("test_files/test_read.txt", O_RDONLY);// IMPORTANT: Make sure this file exists
+  int resb = read(fd, bufferb, 21);
+  close(fd);
+ 
+  if(((strcmp(buffer, bufferb)) != 0) || res != resb)
+    printf("read failed. \n Was %s || size %d. \n should be %s || size %d \n", buffer, res, bufferb, resb);
+  else
+    printf("read passed!\n");
+
+}
+
+void test_write(void)
+{
+  int fd = open("test_files/test_write.txt", O_CREAT | O_WRONLY, S_IRWXU);
+  int fdb = open("test_files/test_writeb.txt", O_CREAT | O_WRONLY, S_IRWXU);
+ 
+  my_write(fd, "hello, world!", 13);
+  write(fdb, "hello, world!", 13);
+
+  close(fd);
+  close(fdb);
+
+  fd = open("test_files/test_write.txt", O_RDONLY);
+  fdb = open("test_files/test_writeb.txt", O_RDONLY);
+
+  char buffer[13];
+  char bufferb[13];
+
+  read(fd, buffer ,12);
+  read(fdb, bufferb ,12);
+
+  buffer[12] = '\0';
+  buffer[12] = '\0';
+
+  close(fd);
+  close(fdb);
+
+  if((strcmp(buffer, bufferb)) != 0)
+      printf("write failed. Was : %s || should be: %s\n", buffer, bufferb);
+  else
+     printf("write passed!\n");
+    
+   remove("test_files/test_write.txt"); // IMPORTANT: This will remove the file after test. youn won't find this file in the test folder
+   remove("test_files/test_writeb.txt"); // IMPORTANT: This will remove the file after test. youn won't find this file in the test folder
 }
