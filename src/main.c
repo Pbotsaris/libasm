@@ -30,7 +30,6 @@ int main(void)
   return 0;
 }
 
-
 void test_memmove(void)
 {
   // let's copy some overlapping data
