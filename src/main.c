@@ -5,6 +5,8 @@ void test_strchr(void);
 void test_memset(void);
 void test_memcpy(void);
 void test_strcmp(void);
+void test_memmove(void);
+void test_strncmp(void);
 
 int main(void)
 {
@@ -13,10 +15,28 @@ int main(void)
   test_memset();
   test_memcpy();
   test_strcmp();
+  test_memmove();
+  test_strncmp();
 
   return 0;
 }
 
+
+void test_memmove(void)
+{
+  // let's copy some overlapping data
+  char str[] = "pedro jose\n";
+  char strb[] = "pedro jose\n";
+
+  my_memcpy(str + 1, str + 3, 2 * sizeof(char));
+  memcpy(strb + 1, strb + 3, 2 * sizeof(char));
+
+  if((strcmp(str, strb)) != 0)
+    printf("memmove failed. Was %s and should be %s\n", str, strb);
+  else
+    printf("memmove passed!\n");
+
+}
 
 void test_strlen(void)
 {
@@ -30,7 +50,6 @@ void test_strlen(void)
   else
      printf("strlen passed!\n");
 }
-
 
 void test_strchr(void)
 {
@@ -115,3 +134,32 @@ void test_strcmp(void)
    printf("strcmp passed!\n");
 }
 
+void test_strncmp(void)
+{
+  char stra[] = "hello";
+  char strb[] = "hdllo";
+  char strc[] = "Hallo";
+  char strd[] = "hell0";
+  char stre[] = "hello";
+  size_t len = strlen(stra);
+
+  int resa  = my_strncmp(stra, strb, len);
+  int resb = strncmp(stra, strb, len);
+  int resc = my_strncmp(stra, strc, len);
+  int resd = strncmp(stra, strc, len);
+  int rese = my_strncmp(stra, strd, len);
+  int resf = strncmp(stra, strd, len);
+  int resg = my_strncmp(stra, stre, len);
+  int resh = strncmp(stra, stre, len);
+
+  if(resa != resb)
+    printf("strncmp failed. Was: %d, should be: %d \n", resa, resb);
+  else if(resc != resd)
+    printf("strncmp failed. Was: %d, should be: %d \n", resc, resd);
+  else if(rese != resf)
+    printf("strncmp failed. Was: %d, should be: %d \n", rese, resf);
+  else if(resg != resh)
+    printf("strncmp failed. Was: %d, should be: %d \n", resg, resh);
+  else
+   printf("strncmp passed!\n");
+}
